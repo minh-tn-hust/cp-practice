@@ -38,32 +38,14 @@ int main() {
   long long ans = 0;
 
   for (long long i = 1; i <= n; i++) {
-    if(i == 1) {
-      ans = 0;
-      cout << ans << "\n";
-      continue;
-    }
+    long long numberOfCell = i * i;
+    long long numberOfPair = (numberOfCell * (numberOfCell - 1)) / 2;
 
-    if (i == 2) {
-      ans = 6;
-      cout << ans << "\n";
-      continue;
-    }
+    // Count number of 3*2 rectangle can create in current size;
+    // The first 2 means "every rectangle can have 2 pair invalid"
+    // The second 2 means "3 * 2 and 2 * 3 have the same number invalid pair"
+    long long numberOfInvalidPair = (i - 1) * (i - 2) * 2 * 2;
 
-    long long additionCol = i;
-    long long prevSize = i - 1;
-
-    long long additionValidCellPair = 0;
-
-    for (long long row = 1; row <= prevSize; row++) {
-      long long invalidCellPair = fromPositionToInvalidCellPair(prevSize, row, additionCol);
-      additionValidCellPair += prevSize * prevSize - invalidCellPair;
-    }
-
-    long long validCellPairAtConner = prevSize * prevSize - fromPositionToInvalidCellPair(prevSize, i, i);
-
-    ans += (additionValidCellPair * 2) + validCellPairAtConner + prevSize * (2 * prevSize + 1)  +  - 2;
-
-    cout << ans << "\n";
+    cout << numberOfPair - numberOfInvalidPair << "\n";
   }
 }
