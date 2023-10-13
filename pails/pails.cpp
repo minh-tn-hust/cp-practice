@@ -8,19 +8,33 @@
 #include <climits>
 #include <algorithm>
 
-const double epsilon = 1e-9;
 
 using namespace std;
 
 void solve() {
+  int X, Y, M;
+  cin >> X >> Y >> M;
 
+  int xLimit = M / X;
+  int yLimit = M / Y;
+
+  int maximumAmount = INT_MIN;
+  for (int nx = 0; nx <= xLimit; nx++) {
+    for (int ny = 0; ny <= yLimit; ny++) {
+      int milkAmount = nx * X + ny * Y;
+      if (milkAmount <= M) {
+        maximumAmount = max(maximumAmount, milkAmount);
+      }
+    }
+  }
+
+  cout << maximumAmount;
 }
-
 
 int main() {
 
 #ifndef ONLINE_JUDGE
-  string FILE_NAME = "lostcow";
+  string FILE_NAME = "pails";
   freopen((FILE_NAME + ".in").c_str(), "r", stdin);
   freopen((FILE_NAME + ".out").c_str(), "w", stdout);
 #endif
