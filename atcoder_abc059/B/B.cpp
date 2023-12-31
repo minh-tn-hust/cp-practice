@@ -114,9 +114,48 @@ const double epsilon = 1e-9;
 
 using namespace std;
 
+typedef struct Bit {
+    int n;
+    vector<int> bit;
+    Bit(int size) {
+        n = size + 1;
+        nums = vector<int>(n);
+    }
+
+    update(int index, int value) {
+        while (index <= n) {
+            bit[index] += value;
+            index += (index & (-index));
+        }
+    }
+
+    getSum(int index) {
+        int ans = 0;
+        while (index > 0) {
+            ans += bit[index];
+            idx -= (idx & (-idx));
+        }
+        return ans;
+    }
+}
 
 void solve() {
-
+    string a, b;
+    cin >> a >> b;
+    if (a.size() < b.size()) {
+        cout << "LESS";
+    } else if (a.size() > b.size()) {
+        cout << "GREATER";
+    } else {
+        debug(a.compare(b));
+        if (a.compare(b) == 0) {
+            cout << "EQUAL";
+        } else if (a.compare(b) > 0) {
+            cout << "GREATER";
+        } else {
+            cout << "LESS";
+        }
+    }
 }
 
 

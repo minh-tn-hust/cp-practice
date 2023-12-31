@@ -116,6 +116,26 @@ using namespace std;
 
 
 void solve() {
+    int k, g, m;
+    cin >> k >> g >> m;
+    int tempG = 0, tempM = 0;
+    while (k--) {
+        if (tempG == g) {
+            tempG = 0;
+        }  else if (tempM = 0) {
+            tempM = m;
+        } else {
+            int filled = min(tempM, g - tempG);
+            tempG = tempG + filled;
+            tempM -= filled;
+            if (tempM == 0) {
+                tempM = m;
+            }
+        }
+        
+    }
+
+    cout << tempG << " " << tempM;
 
 }
 

@@ -114,8 +114,12 @@ const double epsilon = 1e-9;
 
 using namespace std;
 
+vector<string, string> readIO() {
+
+}
 
 void solve() {
+
 
 }
 

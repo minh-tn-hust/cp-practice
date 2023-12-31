@@ -114,9 +114,47 @@ const double epsilon = 1e-9;
 
 using namespace std;
 
+int digSumToNumber[54];
+
+int DIGIT_TRIPLE_BUILD[10];
+
+
+void init() {
+    for (int i = 0; i <= 9; i++) {
+        for (int j = 0; j <= 9; j++) {
+            for (int t = 0; t <= 9; t++) {
+                if (i + j + t <= 9) {
+                    DIGIT_TRIPLE_BUILD[i + j + t]++;
+                }
+            }
+        }
+    }
+}
+
+vector<int> exposeDigits(int n) {
+    vector<int> digits;
+    while (n > 0) {
+        digits.push_back(n % 10);
+        n /= 10;
+    }
+
+    return digits;
+}
 
 void solve() {
-
+    init();
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        cin >> n;
+        vector<int> digits = exposeDigits(n);
+        long long numOfTripple = 1;
+        for (int digit : digits) {
+            numOfTripple *= DIGIT_TRIPLE_BUILD[digit];
+        }
+        cout << numOfTripple << "\n";
+    }
 }
 
 

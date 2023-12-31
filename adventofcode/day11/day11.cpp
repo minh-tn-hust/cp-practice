@@ -114,9 +114,126 @@ const double epsilon = 1e-9;
 
 using namespace std;
 
+const char GALAXY = '#';
+
+vector<int> findingExpanedRow(vector<string> &universe) {
+    vector<int> expanedRows;
+    for (int i = 0; i < universe.size(); i++) {
+        bool hasGalaxy = false;
+        for (auto c : universe[i]) {
+            if (c == GALAXY) {
+                hasGalaxy = true;
+                break;
+            }
+        }
+
+        if (!hasGalaxy) {
+            expanedRows.push_back(i);
+        }
+    }
+
+    return expanedRows;
+}
+
+vector<int> findingExpanedCol(vector<string> &universe) {
+    vector<int> expanedCols;
+    int width = universe[0].size();
+    int height = universe.size();
+
+    for (int c = 0; c < width; c++) {
+        bool hasGalaxy = false;
+        for (int r = 0; r < height; r++) {
+            if (universe[r][c] == GALAXY) {
+                hasGalaxy = true;
+                break;
+            }
+        }
+        
+        if (!hasGalaxy) {
+            expanedCols.push_back(c);
+        }
+    }
+    return expanedCols;
+}
+
+typedef struct GalaxyLocation {
+    int row, col;
+    GalaxyLocation(int row, int col) : row(row), col(col) {}
+} GalaxyLocation;
+
+void __print(GalaxyLocation galaxy) {
+    cerr << "(";
+    cerr << galaxy.row << " " << galaxy.col;
+    cerr << ")";
+}
+
+vector<GalaxyLocation> locateGalaxy(vector<string> &universe) {
+    vector<GalaxyLocation> galaxies;
+
+    for (int row = 0; row < universe.size(); row++) {
+        for (int col = 0; col < universe[row].size(); col++) {
+            if (universe[row][col] == GALAXY) {
+                galaxies.push_back({row, col});
+            }
+        }
+    }
+    return galaxies;
+}
+
+bool isInrange(int value, int max, int min) {
+    return ((value - max) * (value - min) < 0);
+}
+
+const int BIGGER_TIME = 1000000;
+
+int getVerticalSpace(GalaxyLocation &first, GalaxyLocation &second, vector<int> &expanedRows) {
+    int verticalSpace = abs(first.row - second.row);
+    for (auto expanedRow : expanedRows) {
+        if (isInrange(expanedRow, first.row, second.row)) {
+            verticalSpace += (BIGGER_TIME - 1);
+        }
+    }
+
+    return verticalSpace;
+}
+
+int getHorizontalSpace(GalaxyLocation &first, GalaxyLocation &second, vector<int> &expanedCols) {
+    int horizontalSpace = abs(first.col - second.col);
+    for (auto expanedCol : expanedCols) {
+        if (isInrange(expanedCol, first.col, second.col)) {
+            horizontalSpace += (BIGGER_TIME - 1);
+        }
+    }
+
+    return horizontalSpace;
+
+}
+
 
 void solve() {
+    int size;
+    cin >> size;
+    vector<string> universe;
+    string temp;
+    for (int i = 0; i < size; i++) {
+        cin >> temp;
+        universe.push_back(temp);
+    }
 
+    vector<int> expanedRows = findingExpanedRow(universe);
+    vector<int> expanedCols = findingExpanedCol(universe);
+    vector<GalaxyLocation> galaxies = locateGalaxy(universe);
+
+    long long sum = 0;
+    for (int i = 0; i < galaxies.size(); i++) {
+        for (int j = i + 1; j < galaxies.size(); j++) {
+            int verticalSpace = getVerticalSpace(galaxies[i], galaxies[j], expanedRows);
+            int horizontalSpace = getHorizontalSpace(galaxies[i], galaxies[j], expanedCols);
+            sum += (verticalSpace + horizontalSpace);
+        }
+    }
+
+    cout << sum;
 }
 
 

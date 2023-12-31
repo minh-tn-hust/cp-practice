@@ -116,6 +116,20 @@ using namespace std;
 
 
 void solve() {
+    long long n, s, k;
+    cin >> n >> s >> k;
+    int money = 0;
+    int p, q;
+    for (int i = 0; i < n; i++) {
+        cin >> p >> q;
+        money += p * q;
+    }
+
+    if (money >= s) {
+        cout << money;
+    } else {
+        cout << money + k;
+    }
 
 }
 

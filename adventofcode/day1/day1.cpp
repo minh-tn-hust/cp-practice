@@ -114,9 +114,58 @@ const double epsilon = 1e-9;
 
 using namespace std;
 
+bool isNumber(char c)   {
+    return (c <= '9' && c >= '0');
+}
+
+long long stringToNum(string s) {
+    if (s == "") {
+        return 0;
+    }
+    int size = s.size();
+    long long pow = 1;
+    long long num = 0;
+    for (int i = size - 1; i >= 0; i--) {
+        num += pow * (s[i] - '0');
+        pow *= 10;
+    }
+
+    return num;
+}
+
+long long exposeTheNumber(string s) {
+    string num = "";
+
+    int numOfDigit = 2;
+    for (int i = 0; i < s.size(); i++) {
+        if (isNumber(s[i])) {
+            num += s[i];
+            break;
+        }
+    }
+
+    for (int i = s.size() -1 ; i >= 0; i--) {
+        if (isNumber(s[i])) {
+            num += s[i];
+            break;
+        }
+    }
+
+    return stringToNum(num);
+}
 
 void solve() {
+    int t;
+    cin >> t;
+    long long bigSum = 0;
+    for (int i = 0; i < t; i++) {
+        string s; 
+        cin >> s;
+        debug(s, exposeTheNumber(s));
+        bigSum += exposeTheNumber(s);
+    }
 
+    cout << bigSum;
 }
 
 

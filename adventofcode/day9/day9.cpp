@@ -114,9 +114,81 @@ const double epsilon = 1e-9;
 
 using namespace std;
 
+vector<string> split(string s, char splitter) {
+    vector<string> splitString;
+    int lastIndex = 0;
+    for (int i = 0; i < s.size(); i++) {
+        if (s[i] == splitter) {
+            splitString.push_back(s.substr(lastIndex, i - lastIndex));
+            lastIndex = i + 1;
+        }
+    }
+
+    if (lastIndex != s.size()) {
+        splitString.push_back(s.substr(lastIndex));
+    }
+
+    return splitString;
+}
+
+long long stringToNum(string s) {
+    return atoi(s.c_str());
+}
+
+vector<int> exposeSensorHistory(string sensorHistory) {
+    vector<string> sensorValues = split(sensorHistory, ' ');
+
+    vector<int> history;
+    for (auto sensorValue : sensorValues) {
+        history.push_back(stringToNum(sensorValue));
+    }
+
+    return history;
+}
+
+int isHistoryStability(vector<int> &history) {
+    for (auto value : history) {
+        if (value != 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+long long extrapolate(vector<int> &history) {
+    if (isHistoryStability(history)) {
+        return 0;
+    }
+
+    vector<int> extrapolateHistory;
+    int historySize = history.size();
+    for (int i = 1; i < historySize; i++) {
+        extrapolateHistory.push_back(history[i] - history[i - 1]);
+    }
+
+    long long firstValue = history[0];
+    
+    return firstValue - extrapolate(extrapolateHistory);
+}
+
+
 
 void solve() {
+    int numSensors;
+    cin >> numSensors;
+    cin.ignore();
 
+    long long sumOfExtrapolaValues = 0;
+    for (int i = 0; i < numSensors; i++) {
+        string sensorOutput;
+        getline(cin, sensorOutput);
+
+        vector<int> history = exposeSensorHistory(sensorOutput);
+        long long nextValue = extrapolate(history);
+        sumOfExtrapolaValues += nextValue;
+    }
+
+    cout << sumOfExtrapolaValues;
 }
 
 

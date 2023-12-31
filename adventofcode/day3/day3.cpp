@@ -114,9 +114,98 @@ const double epsilon = 1e-9;
 
 using namespace std;
 
+int stringToNum(string s) {
+    return atoi(s.c_str());
+}
+
+bool isSymbol(char c) {
+    return !(c >= '0' && c <= '9' || c == '.');
+}
+
+bool isNumber(char c) {
+    return (c >= '0' && c <= '9');
+}
+
+typedef struct NumberLocation {
+    int row, leftCol, rightCol;
+
+    NumberLocation() {};
+    NumberLocation(int row, int leftCol, int rightCol) : row(row), leftCol(leftCol), rightCol(rightCol) {};
+    bool isAnySymbolAround(vector<string> &engine) {
+        int size = engine.size();
+        for (int r = max(0, row - 1); r <= min(size - 1, row + 1); r++) {
+            for (int c = max(0, leftCol - 1); c <= min(size - 1, rightCol + 1); c++) {
+                if (isSymbol(engine[r][c])) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    void printArea(vector<string> &engine) {
+        // int size = engine.size();
+        // for (int r = max(0, row - 1); r <= min(size - 1, row + 1); r++) {
+        //     for (int c = max(0, leftCol - 1); c <= min(size - 1, rightCol + 1); c++) {
+        //         cout << engine[r][c];
+        //     }
+        //     cout << "\n";
+        // }
+        // cout << "\n";
+
+    }
+};
+
+vector<NumberLocation> extractNumberLocation(vector<string> &engine) {
+    int size = engine.size();
+    vector<NumberLocation> nums;
+
+    for (int r = 0; r < size; r++) {
+        int beginNum = -1;
+        for (int c = 0; c < size; c++) {
+            if (isNumber(engine[r][c])) {
+                if (beginNum == -1) {
+                    beginNum = c;
+                }
+            } else {
+                if (beginNum != -1) {
+                    nums.push_back({r, beginNum, c - 1});
+                    beginNum = -1;
+                }
+            }
+
+        }
+    }
+
+    return nums;
+}
 
 void solve() {
+    vector<string> engine;
+    int size;
+    cin >> size;
+    for (int i = 0; i < size; i++) {
+        string row;
+        cin >> row;
+        engine.push_back(row);
+    }
+    
+    vector<NumberLocation> nums = extractNumberLocation(engine);
 
+    int sum = 0;
+    int lastRow = 0;
+    for (auto &location : nums) {
+        if (location.isAnySymbolAround(engine)) {
+            string num = engine[location.row].substr(location.leftCol, location.rightCol - location.leftCol + 1);
+            cerr << num << " ";
+            if (lastRow != location.row) {
+                cerr << "\n";
+                lastRow = location.row;
+            }
+            sum += stringToNum(num);
+        }
+    }
+
+    cout << sum;
 }
 
 

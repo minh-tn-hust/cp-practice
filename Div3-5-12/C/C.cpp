@@ -116,6 +116,37 @@ using namespace std;
 
 
 void solve() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int alphabetCount[26];
+        memset(alphabetCount, 0, sizeof(alphabetCount));
+        string s;
+        int length;
+        cin >> length;
+        cin >> s;
+
+        for (int i = 0; i < s.size(); i++) {
+            alphabetCount[s[i] - 'a']++;
+        }
+
+        bool isMoreThanHalf = false;
+        int num;
+        for (int i = 0; i < 26; i++) {
+            if (alphabetCount[i] > s.size() / 2) {
+                isMoreThanHalf = true;
+                num = alphabetCount[i];
+            }
+        }
+
+        debug(s, isMoreThanHalf);
+
+        if (isMoreThanHalf) {
+            cout <<  num * 2 - s.size() << "\n";
+        } else {
+            cout << ((s.size() % 2 == 0) ? 0 : 1) << "\n";
+        }
+    }
 
 }
 

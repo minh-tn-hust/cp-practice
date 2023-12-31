@@ -114,8 +114,73 @@ const double epsilon = 1e-9;
 
 using namespace std;
 
+typedef struct Segment {
+    int begin, end;
+    Segment(int begin, int end) : begin(begin), end(end) {};
+
+    bool isValid() {
+        return (begin != -1 && end != -1);
+
+    }
+
+    Segment canMoveToThisSegment(Segment &lastSegment, int step) {
+        Segment nextMove = {lastSegment.begin - step, lastSegment.end + step};
+        nextMove.begin = max(begin, nextMove.begin);
+        nextMove.end = min(nextMove.end, end);
+
+        if (nextMove.begin <= nextMove.end) {
+            return nextMove;
+        } else {
+            return {-1, -1};
+        }
+    }
+
+} Segment;
+
+bool isThisStepPass(int step, vector<Segment> &segments) {
+    Segment prevLevelSegment = {0, 0};
+    for (auto &segment : segments) {
+        Segment nextLevelSegment = segment.canMoveToThisSegment(prevLevelSegment, step);
+
+        if (nextLevelSegment.isValid()) {
+            prevLevelSegment= nextLevelSegment;
+        } else {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 
 void solve() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int numSeg;
+        cin >> numSeg;
+        vector<Segment> segments;
+        int begin, end;
+        for (int i = 0; i < numSeg; i++) {
+            cin >> begin >> end;
+            segments.push_back({begin, end});
+        }
+
+        int left = 0, right = 1e9;
+        int stepPass = -1;
+        while (left <= right) {
+            int middle = (left + right) >> 1;
+            if (isThisStepPass(middle, segments)) {
+                stepPass = middle;
+                right = middle - 1;
+            } else {
+                left = middle + 1;
+            }
+        }
+
+        cout << stepPass << "\n";
+
+    }
 
 }
 

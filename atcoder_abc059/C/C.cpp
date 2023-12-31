@@ -115,8 +115,51 @@ const double epsilon = 1e-9;
 using namespace std;
 
 
-void solve() {
+const int POSITIVE = 1;
+const int NEGATIVE = -1;
 
+int changeSign(int curSign) {
+    if (curSign == POSITIVE) {
+        return NEGATIVE;
+    } 
+    return POSITIVE;
+}
+
+long long tryWithFirstIndexSign(int sign, vector<int> &nums) {
+    int numsSize = nums.size();
+    long long numOperations = 0;
+    int ithSum = 0;
+
+    for (int i = 0; i < numsSize; i++) {
+        ithSum += nums[i];
+        if (ithSum * sign <= 0) {
+            numOperations += abs(sign - ithSum);
+            ithSum = sign;
+        }
+
+        sign = changeSign(sign);
+    }
+
+    return numOperations;
+}
+
+
+void solve() {
+    int n;
+    cin >> n;
+    vector<int> a;
+    
+    int temp;
+    for (int i = 0; i < n; i++) {
+        cin >> temp;
+        a.push_back(temp);
+    }
+
+
+    long long minimumOperations = tryWithFirstIndexSign(POSITIVE, a);
+    minimumOperations = min(minimumOperations, tryWithFirstIndexSign(NEGATIVE, a));
+
+    cout << minimumOperations;
 }
 
 

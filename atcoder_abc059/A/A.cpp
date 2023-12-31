@@ -114,9 +114,38 @@ const double epsilon = 1e-9;
 
 using namespace std;
 
+vector<string> split(string s, char splitter) {
+    vector<string> splitString;
+    int lastIndex = 0;
+    for (int i = 0; i < s.size(); i++) {
+        if (s[i] == splitter) {
+            splitString.push_back(s.substr(lastIndex, i - lastIndex));
+            lastIndex = i + 1;
+        }
+    }
+
+    if (lastIndex != s.size()) {
+        splitString.push_back(s.substr(lastIndex));
+    }
+
+    return splitString;
+}
+
+char toUppercase(char c) {
+    if (c >= 'a' && c <= 'z') {
+        return c + 'A' - 'a';
+    }
+    return c;
+}
 
 void solve() {
-
+    string s;
+    getline(cin, s);
+    vector<string> tokenize = split(s, ' ');
+    debug(tokenize);
+    for (int i = 0; i < tokenize.size(); i++) {
+        cout << toUppercase(tokenize[i][0]);
+    }
 }
 
 

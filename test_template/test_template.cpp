@@ -114,8 +114,73 @@ const double epsilon = 1e-9;
 
 using namespace std;
 
+typedef struct Segment {
+    int begin, end;
+    Segment(int begin, int end) : begin(begin), end(end) {};
+    int canMoveToThisSegment(int prevIndex, int step) {
+        if (prevIndex > end) {
+            if(prevIndex - step <= end) {
+                return max(begin, prevIndex -step);
+            }
+        }
+
+        if (prevIndex < begin) {
+            if (prevIndex + step >= begin) {
+                return min(end, prevIndex + step);
+            }
+        }
+
+        return -1;
+    }
+
+
+} Seqment;
+
+bool isThisStepPass(int step, vector<Segment> &segments) {
+    int prevIndex = 0;
+    for (auto &segment : segments) {
+        int nextIndex = segment.canMoveToThisSegment(prevIndex, step);
+        if (nextIndex != -1) {
+            prevIndex = nextIndex;
+        } else {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 
 void solve() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int numSeg;
+        cin >> numSeg;
+        vector<Segment> segments;
+        int begin, end;
+        int maximumIndex = 0;
+        for (int i = 0; i < numSeg; i++) {
+            cin >> begin >> end;
+            segments.push_back({begin, end});
+            maximumIndex = max(maximumIndex, end);
+        }
+
+        int left = 0, right = maximumIndex;
+        int stepPass = -1;
+        while (left != right) {
+            int middle = (left + right) >> 1;
+            if (isThisStepPass(middle, segments)) {
+                stepPass = middle;
+                right = middle - 1;
+            } else {
+                left = middle + 1;
+            }
+        }
+
+        cout << stepPass;
+
+    }
 
 }
 

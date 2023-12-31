@@ -1,4 +1,4 @@
-#include <iostream>
+1350#include <iostream>
 #include <vector>
 #include <map>
 #include <set>
@@ -114,8 +114,72 @@ const double epsilon = 1e-9;
 
 using namespace std;
 
+const int LOWER_CASE_DELETE = 'b';
+const int UPPER_CASE_DELETE = 'B';
+
+bool isUpperCase(char c) {
+    return (c >= 'A' && c <= 'Z');
+}
+
+vector<pair<char, int>> getRemainningInStack(stack<pair<char, int>> &stk) {
+    vector<pair<char, int>> container;
+    while (!stk.empty()) {
+        auto top = stk.top();
+        container.push_back(top);
+        stk.pop();
+    }
+
+    return container;
+}
+
+string getOutput(string inputSequence) {
+    stack<pair<char, int>> lowerCase;
+    stack<pair<char, int>> upperCase;
+    int index = 0;
+    for (char keyPress : inputSequence) {
+        if (keyPress == LOWER_CASE_DELETE) {
+            if (!lowerCase.empty()) {
+                lowerCase.pop();
+            }
+        } else if (keyPress == UPPER_CASE_DELETE) {
+            if (!upperCase.empty()) {
+                upperCase.pop();
+            }
+        } else {
+            if (isUpperCase(keyPress)) {
+                upperCase.push({keyPress, index});
+            } else {
+                lowerCase.push({keyPress, index});
+            }
+        }
+        index++;
+    }
+
+    vector<pair<char, int>> lowerCaseSequence = getRemainningInStack(lowerCase);
+    vector<pair<char, int>> upperCaseSequence = getRemainningInStack(upperCase);
+
+    vector<pair<char, int>> combineSequence(lowerCaseSequence);
+    combineSequence.insert(combineSequence.end(), upperCaseSequence.begin(), upperCaseSequence.end());
+    sort(combineSequence.begin(), combineSequence.end(), [&](auto a, auto b) {
+        return a.second < b.second;
+    });
+
+    string output = "";
+    for (auto &[keyPress, index] : combineSequence) {
+        output += keyPress;
+    }
+
+    return output;
+}
 
 void solve() {
+    int t;
+    cin >> t;
+    while (t--) {
+        string s;
+        cin >> s;
+        cout << getOutput(s) << "\n";
+    }
 
 }
 
